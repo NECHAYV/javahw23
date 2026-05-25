@@ -1,5 +1,6 @@
 package org.exemple.legacy.service;
 
+import org.exemple.legacy.model.Faculty;
 import org.exemple.legacy.model.Student;
 import org.exemple.legacy.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,14 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    public List<Student> findByAgeBetween(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
+    }
+
+    public Faculty getFacultyOfStudent(long studentId) {
+        Student student = get(studentId);
+        return student.getFaculty();
+    }
     public Student create(Student student) {
         return studentRepository.save(student);
     }

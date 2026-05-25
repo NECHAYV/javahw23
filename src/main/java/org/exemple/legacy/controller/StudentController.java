@@ -1,5 +1,6 @@
 package org.exemple.legacy.controller;
 
+import org.exemple.legacy.model.Faculty;
 import org.exemple.legacy.model.Student;
 import org.exemple.legacy.service.StudentService;
 import org.springframework.http.HttpStatus;
@@ -42,4 +43,15 @@ public class StudentController {
     public List<Student> filterByAge(@RequestParam int age) {
         return studentService.filterByAge(age);
     }
+
+    @GetMapping("/filter/age-between")
+    public List<Student> filterByAgeBetween(@RequestParam int min, @RequestParam int max) {
+        return studentService.findByAgeBetween(min, max);
+    }
+
+    @GetMapping("/{id}/faculty")
+    public Faculty getStudentFaculty(@PathVariable long id) {
+        return studentService.getFacultyOfStudent(id);
+    }
+
 }

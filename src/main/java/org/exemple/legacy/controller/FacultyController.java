@@ -2,6 +2,7 @@ package org.exemple.legacy.controller;
 
 
 import org.exemple.legacy.model.Faculty;
+import org.exemple.legacy.model.Student;
 import org.exemple.legacy.service.FacultyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,18 @@ public class FacultyController {
         facultyService.delete(id);
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filter/color")
     public List<Faculty> filterByColor(@RequestParam String color) {
         return facultyService.filterByColor(color);
+    }
+
+    @GetMapping("/filter/search")
+    public List<Faculty> filterByNameOrColor(@RequestParam String search) {
+        return facultyService.findByNameOrColor(search);
+    }
+
+    @GetMapping("/{id}/students")
+    public List<Student> getFacultyStudents(@PathVariable long id) {
+        return facultyService.getStudentsOfFaculty(id);
     }
 }
