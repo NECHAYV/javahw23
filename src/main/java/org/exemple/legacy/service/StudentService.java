@@ -1,6 +1,7 @@
 package org.exemple.legacy.service;
 
 import org.exemple.legacy.model.Student;
+import org.exemple.legacy.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -8,17 +9,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
-    private final Map<Long, Student> students = new HashMap<>();
-    private long lastId = 0;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     public Student create(Student student) {
-        student.setId(++lastId);
-        students.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student get(long id) {
-        return Optional.ofNullable(students.get(id))
+        return studentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Студент с id=" + id + " не найден"));
     }
 
@@ -26,18 +28,15 @@ public class StudentService {
         Student existing = get(id);
         existing.setName(student.getName());
         existing.setAge(student.getAge());
-        return existing;
+        return studentRepository.save(existing);
     }
 
     public void delete(long id) {
-        if (students.remove(id) == null) {
-            throw new NoSuchElementException("Студент с id=" + id + " не найден");
-        }
+        get(id); // проверим существование
+        studentRepository.deleteById(id);
     }
 
     public List<Student> filterByAge(int age) {
-        return students.values().stream()
-                .filter(s -> s.getAge() == age)
-                .collect(Collectors.toList());
+        return studentRepository.findByAge(age);
     }
 }
