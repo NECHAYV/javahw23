@@ -6,6 +6,8 @@ import org.exemple.legacy.model.Student;
 import org.exemple.legacy.repository.AvatarRepository;
 import org.exemple.legacy.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,5 +85,9 @@ public class AvatarService {
             throw new NotFoundException("Файл аватара не найден на диске: " + avatar.getFilePath());
         }
         return Files.readAllBytes(path);
+    }
+
+    public Page<Avatar> getAllAvatars(Pageable pageable) {
+        return avatarRepository.findAll(pageable);
     }
 }

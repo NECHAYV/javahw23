@@ -4,6 +4,7 @@ import org.exemple.legacy.model.Faculty;
 import org.exemple.legacy.model.Student;
 import org.exemple.legacy.service.StudentService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +53,21 @@ public class StudentController {
     @GetMapping("/{id}/faculty")
     public Faculty getStudentFaculty(@PathVariable long id) {
         return studentService.getFacultyOfStudent(id);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalStudents() {
+        return ResponseEntity.ok(studentService.getTotalCount());
+    }
+
+    @GetMapping("/average-age")
+    public ResponseEntity<Double> getAverageAge() {
+        return ResponseEntity.ok(studentService.getAverageAge());
+    }
+
+    @GetMapping("/last-five")
+    public List<Student> getLastFiveStudents() {
+        return studentService.getLastFiveStudents();
     }
 
 }

@@ -4,6 +4,7 @@ import org.exemple.legacy.exeption.NotFoundException;
 import org.exemple.legacy.model.Faculty;
 import org.exemple.legacy.model.Student;
 import org.exemple.legacy.repository.StudentRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -52,5 +53,17 @@ public class StudentService {
     public Faculty getFacultyOfStudent(long studentId) {
         Student student = get(studentId);
         return student.getFaculty();
+    }
+
+    public Long getTotalCount() {
+        return studentRepository.getTotalCount();
+    }
+
+    public Double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+
+    public List<Student> getLastFiveStudents() {
+        return studentRepository.findLastFive(PageRequest.of(0, 5));
     }
 }
