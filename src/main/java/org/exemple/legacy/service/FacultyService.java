@@ -1,6 +1,7 @@
 package org.exemple.legacy.service;
 
 
+import org.exemple.legacy.exeption.NotFoundException;
 import org.exemple.legacy.model.Faculty;
 import org.exemple.legacy.model.Student;
 import org.exemple.legacy.repository.FacultyRepository;
@@ -8,12 +9,12 @@ import org.exemple.legacy.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
     private final FacultyRepository facultyRepository;
     private final StudentRepository studentRepository;
+
     public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
         this.facultyRepository = facultyRepository;
         this.studentRepository = studentRepository;
@@ -23,17 +24,9 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public List<Faculty> findByNameOrColor(String search) {
-        return facultyRepository.findByColorIgnoreCaseOrNameIgnoreCase(search, search);
-    }
-
-    public List<Student> getStudentsOfFaculty(long facultyId) {
-        return studentRepository.findByFacultyId(facultyId);
-    }
-
     public Faculty get(long id) {
         return facultyRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Факультет с id=" + id + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Факультет с id=" + id + " не найден"));
     }
 
     public Faculty update(long id, Faculty faculty) {
@@ -50,5 +43,14 @@ public class FacultyService {
 
     public List<Faculty> filterByColor(String color) {
         return facultyRepository.findByColorIgnoreCase(color);
+    }
+
+    public List<Faculty> findByNameOrColor(String search) {
+        return facultyRepository.findByColorIgnoreCaseOrNameIgnoreCase(search, search);
+    }
+
+    public List<Student> getStudentsOfFaculty(long facultyId) {
+        get(facultyId); // проверяем существование
+        return studentRepository.findByFacultyId(facultyId);
     }
 }
