@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -34,6 +35,25 @@ public class StudentService {
                     return new NotFoundException("Студент с id=" + id + " не найден");
                 });
     }
+
+    public List<String> getNamesStartingWithA() {
+        logger.info("Was invoked method for get names of students starting with 'A'");
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(name -> name.startsWith("А"))  // русская А; если нужна латинская 'A', замените
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public double getAveragesAge() {
+        logger.info("Was invoked method for get average age of all students");
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+    }
+
 
     public Student update(long id, Student student) {
         logger.info("Was invoked method for update student with id = {}", id);

@@ -68,4 +68,14 @@ public class FacultyService {
         get(facultyId); // проверит существование, иначе выбросит NotFoundException
         return studentRepository.findByFacultyId(facultyId);
     }
+
+    public String getLongestFacultyName() {
+        logger.info("Was invoked method for get longest faculty name");
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("");
+    }
+
+
 }
