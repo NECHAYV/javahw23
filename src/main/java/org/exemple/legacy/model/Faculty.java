@@ -11,7 +11,9 @@ public class Faculty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String color;
 
     @OneToMany(mappedBy = "faculty")
