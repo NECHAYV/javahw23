@@ -103,4 +103,9 @@ public class StudentService {
         logger.info("Was invoked method for get last five students");
         return studentRepository.findLastFive(PageRequest.of(0, 5));
     }
+
+    public List<Student> getAllStudents() {
+        logger.info("Was invoked method for get all students");
+        return studentRepository.findAll();
+    }
 }

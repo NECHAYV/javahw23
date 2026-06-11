@@ -80,4 +80,58 @@ public class StudentController {
         return studentService.getAveragesAge();
     }
 
+
+    // Эндпоинт для параллельного вывода (без синхронизации)
+    @GetMapping("/students/print-parallel")
+    public void printStudentsParallel() {
+        List<Student> students = studentService.getAllStudents();
+        if (students == null || students.size() < 6) {
+            System.out.println("Недостаточно студентов (нужно минимум 6)");
+            return;
+        }
+        // Вывод первых двух студентов в основном потоке
+        System.out.println("Main thread: " + students.get(0).getName());
+        System.out.println("Main thread: " + students.get(1).getName());
+
+        // Поток для 3-го и 4-го студента
+        new Thread(() -> {
+            System.out.println("Thread-1: " + students.get(2).getName());
+            System.out.println("Thread-1: " + students.get(3).getName());
+        }).start();
+
+        // Поток для 5-го и 6-го студента
+        new Thread(() -> {
+            System.out.println("Thread-2: " + students.get(4).getName());
+            System.out.println("Thread-2: " + students.get(5).getName());
+        }).start();
+    }
+
+    // Синхронизированный метод для вывода одного имени
+    private synchronized void printName(String name, String threadName) {
+        System.out.println(threadName + ": " + name);
+    }
+
+    @GetMapping("/students/print-synchronized")
+    public void printStudentsSynchronized() {
+        List<Student> students = studentService.getAllStudents();
+        if (students == null || students.size() < 6) {
+            System.out.println("Недостаточно студентов (нужно минимум 6)");
+            return;
+        }
+        // Вывод первых двух студентов в основном потоке
+        printName(students.get(0).getName(), "main");
+        printName(students.get(1).getName(), "main");
+
+        // Поток для 3-го и 4-го студента
+        new Thread(() -> {
+            printName(students.get(2).getName(), "thread-1");
+            printName(students.get(3).getName(), "thread-1");
+        }).start();
+
+        // Поток для 5-го и 6-го студента
+        new Thread(() -> {
+            printName(students.get(4).getName(), "thread-2");
+            printName(students.get(5).getName(), "thread-2");
+        }).start();
+    }
 }
