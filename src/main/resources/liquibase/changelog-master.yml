@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: classpath:liquibase/changesets/001-create-student-name-index.xml
+  - include:
+      file: classpath:liquibase/changesets/002-create-faculty-name-color-index.xml
